@@ -1,11 +1,10 @@
 import torch
 import torchvision
 import torch.nn as nn
-from SampleNN import *
 
-class sFeatures(nn.Module):
+class Features(nn.Module):
     def __init__(self):
-        super(sFeatures, self).__init__()
+        super(Features, self).__init__()
         self.L0  = nn.Conv2d(3, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
         self.L1  = nn.ReLU(inplace = True)
         self.L2  = nn.Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
@@ -39,25 +38,24 @@ class sFeatures(nn.Module):
         self.L30 = nn.MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
     
     def forward(self, x):
-        x = oSample()(x)
-        x = oSample()(self.L1(self.L0(x)))
-        x = oSample()(self.L4(self.L3(self.L2(x))))
-        x = oSample()(self.L6(self.L5(x)))
-        x = oSample()(self.L9(self.L8(self.L7(x))))
-        x = oSample()(self.L11(self.L10(x)))
-        x = oSample()(self.L13(self.L12(x)))
-        x = oSample()(self.L16(self.L15(self.L14(x))))
-        x = oSample()(self.L18(self.L17(x)))
-        x = oSample()(self.L20(self.L19(x)))
-        x = oSample()(self.L23(self.L22(self.L21(x))))
-        x = oSample()(self.L25(self.L24(x)))
-        x = oSample()(self.L27(self.L26(x)))
-        x = oSample()(self.L30(self.L29(self.L28(x))))
+        x = self.L1(self.L0(x))
+        x = self.L4(self.L3(self.L2(x)))
+        x = self.L6(self.L5(x))
+        x = self.L9(self.L8(self.L7(x)))
+        x = self.L11(self.L10(x))
+        x = self.L13(self.L12(x))
+        x = self.L16(self.L15(self.L14(x)))
+        x = self.L18(self.L17(x))
+        x = self.L20(self.L19(x))
+        x = self.L23(self.L22(self.L21(x)))
+        x = self.L25(self.L24(x))
+        x = self.L27(self.L26(x))
+        x = self.L30(self.L29(self.L28(x)))
         return x
 
-class sClassifier(nn.Module):
+class Classifier(nn.Module):
     def __init__(self):
-        super(sClassifier, self).__init__()
+        super(Classifier, self).__init__()
         num_classes = 1000
         self.L0 = nn.Linear(512 * 7 * 7, 4096)
         self.L1 = nn.ReLU(True)
@@ -68,16 +66,16 @@ class sClassifier(nn.Module):
         self.L6 = nn.Linear(4096, num_classes)
     
     def forward(self, x):
-        x = oSample()(self.L2(self.L1(self.L0(x))))
-        x = oSample()(self.L5(self.L4(self.L3(x))))
-        x = oSample()(self.L6(x))
+        x = self.L2(self.L1(self.L0(x)))
+        x = self.L5(self.L4(self.L3(x)))
+        x = self.L6(x)
         return x
 
-class SampleVGG16(nn.Module):
+class FloatVGG16(nn.Module):
     def __init__(self):
-        super(SampleVGG16,self).__init__()
-        self.features = sFeatures()
-        self.classifier = sClassifier()
+        super(FloatVGG16,self).__init__()
+        self.features = Features()
+        self.classifier = Classifier()
     def forward(self, x):
         x = self.features(x)
         x = x.view(x.size(0), -1)
