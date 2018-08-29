@@ -70,3 +70,13 @@ class Classifier(nn.Module):
         x = self.L5(self.L4(self.L3(x)))
         x = self.L6(x)
         return x
+
+class FloatVGG16(nn.Module):
+    def __init__(self):
+        super(FloatVGG16,self).__init__()
+        self.features = Features()
+        self.classifier = Classifier()
+    def forward(self, x):
+        x = self.features(x)
+        x = x.view(x.size(0), -1)
+        return self.classifier(x)
