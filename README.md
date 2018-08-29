@@ -6,7 +6,10 @@ Sampling Deep Neural Networks to fixed point in **Pytorch**
     * Xor_Sample(Cuda).ipynb: fixed-point implementation of a Xor function in NN
     * Test_int.ipynb: several tests on using only int operations for Xor function
 2. CIFAR
-    * Working on different accurcies including 8 bits and 16 bits and various differnt networks
+    * Working on different accuracies including 8 bits and 16 bits and various differnt networks
+
+3. Image Net
+    * Finished Sampling VGG16 pretrained on Image Net
 
 ## Failures
 1. It is crucially important that PyTorch only support float point in cuda versions, so any test based on integer could not be applied to cuda devices
