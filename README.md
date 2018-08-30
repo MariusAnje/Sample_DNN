@@ -14,3 +14,6 @@ Sampling Deep Neural Networks to fixed point in **Pytorch**
 
 ## Failures
 1. It is crucially important that PyTorch only support float point in cuda versions, so any test based on integer could not be applied to cuda devices
+
+## Notes
+1. Implemented a very radical method in sampling, checking in training is needed.
