@@ -13,6 +13,7 @@ Sampling Deep Neural Networks to fixed point in **Pytorch**
     * Got 8x slower, still working on it (conservative version)
     * It is clear that the lower-bound and higer-bound check and re-evaluation results in 7x of slower speed
     * 1.2x slower if overflow is permitted
+    * 0.3% accuracy loss in val(60.33-60.08)
 
 ## Failures
 1. It is crucially important that PyTorch only support float point in cuda versions, so any test based on integer could not be applied to cuda devices
