@@ -21,3 +21,4 @@ Sampling Deep Neural Networks to fixed point in **Pytorch**
 
 ## Notes
 1. Implemented a very radical method in sampling, checking in training is needed (ver 2018.8.30).
+2. VGG16 needs a dynamic range of $2^8$ and a precision of $2^{-6}$ BN seems to be helpful
