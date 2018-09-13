@@ -20,7 +20,7 @@ class oSample(torch.autograd.Function):
     def __init__(ctx):
         N = 8
         ctx.Q = pow(2, N-1) - 1
-        ctx.delt = pow(2,-7)
+        ctx.delt = pow(2,-5)
     def forward(ctx, inputs):
         Q = ctx.Q
         delt = ctx.delt
