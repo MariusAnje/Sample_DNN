@@ -154,8 +154,7 @@ class Classifier(nn.Module):
 class FloatVGG16(nn.Module):
     def __init__(self, bn = False):
         super(FloatVGG16,self).__init__()
-        self.bn = bn
-        self.features = Features(bn = self.bn)
+        self.features = Features(bn = bn)
         self.classifier = Classifier()
     def forward(self, x):
         x = self.features(x)
