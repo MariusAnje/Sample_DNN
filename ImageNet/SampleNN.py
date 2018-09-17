@@ -29,12 +29,25 @@ class oSample(torch.autograd.Function):
         return S
     def backward(ctx, g):
         return g
+
+class mSample(torch.autograd.Function):
+    def __init__(ctx, N = 16, m = 6):
+        ctx.Q = pow(2, N-1) - 1
+        ctx.delt = pow(2,-m)
+    def forward(ctx, inputs):
+        Q = ctx.Q
+        delt = ctx.delt
+        M = (inputs/delt).round().to(torch.int16)
+        S = delt*M.to(torch.float32)
+        return S
+    def backward(ctx, g):
+        return g
     
-def sampleStateDict(net):
+def sampleStateDict(net,N = 16, m = 6):
     Dict = net.state_dict()
     Key = Dict.keys()
     for i in Key:
-        Dict[i] = oSample()(Dict[i])
+        Dict[i] = mSample(N,m)(Dict[i])
     net.load_state_dict(Dict)
 
 def protectStateDict(net):
