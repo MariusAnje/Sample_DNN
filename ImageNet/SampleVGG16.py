@@ -1,7 +1,7 @@
 import torch
 import torchvision
 import torch.nn as nn
-from SampleNN_dev import *
+from SampleNN import *
 
 class sFeatures(nn.Module):
     """Total bits N, bits of decimal fraction m"""
