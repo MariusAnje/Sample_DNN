@@ -47,8 +47,7 @@ class mSample(torch.autograd.Function):
             raise Exception("We only support int16 and int8")
     def forward(ctx, inputs):
         delt = ctx.delt
-        M = (inputs.to(torch.float32)/delt)
-        M = M.round().to(ctx.DType)
+        M = (inputs.to(torch.float32)/delt).round().to(ctx.DType)
         S = M.to(torch.float32)*delt
         return S
     def backward(ctx, g):
@@ -65,6 +64,7 @@ def sampleStateDict(net,N = 16, m = 6):
     for i in Key:
         Dict[i] = mSample(N,m)(Dict[i])
     net.load_state_dict(Dict)
+    del Dict
 
 def protectStateDict(net):
     """
