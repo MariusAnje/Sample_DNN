@@ -10,6 +10,15 @@ Sampling Deep Neural Networks to fixed point in **Pytorch**
 
 3. Image Net
     * Finished Sampling VGG16 pretrained on Image Net
+    * Got 8x slower, still working on it (conservative version)
+    * It is clear that the lower-bound and higer-bound check and re-evaluation results in 7x of slower speed
+    * 1.2x slower if overflow is permitted
+    * When using 16 bits,0.3% accuracy loss in val(63.48% - 63.18%)
+    * Incredibly accurate when using 8 bits (63.103%)
 
 ## Failures
 1. It is crucially important that PyTorch only support float point in cuda versions, so any test based on integer could not be applied to cuda devices
+
+## Notes
+1. Implemented a very radical method in sampling, checking in training is needed (ver 2018.8.30).
+2. VGG16 needs a dynamic range of $2^8$ and a precision of $2^{-6}$ BN seems to be helpful
