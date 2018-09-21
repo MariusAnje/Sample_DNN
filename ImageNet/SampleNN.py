@@ -32,24 +32,18 @@ class oSample(torch.autograd.Function):
 
 class mSample(torch.autograd.Function):
     """
-    res = round(input/pow(2,-m)) * pow(2, -m)
-    the rounded part is bounded to int8 or int16,
-    larger number will overflow
+    res = clamp(round(input/pow(2,-m)) * pow(2, -m), -pow(2, N-1), pow(2, N-1) - 1)
     """
     
     def __init__(ctx, N = 16, m = 6):
         ctx.delt = pow(2,-m)
-        if N == 16:
-            ctx.DType = torch.int16
-        elif N == 8:
-            ctx.DType = torch.int8
-        else:
-            raise Exception("We only support int16 and int8")
+        ctx.Q = pow(2, N-1) - 1
+        
     def forward(ctx, inputs):
+        Q = ctx.Q
         delt = ctx.delt
-        M = (inputs.to(torch.float32)/delt).round().to(ctx.DType)
-        S = M.to(torch.float32)*delt
-        return S
+        M = (inputs.to(torch.float32)/delt).round().clamp(-Q-1,Q)
+        return delt*M
     def backward(ctx, g):
         return g
     
