@@ -1,8 +1,9 @@
-# a very radical version in sampling
-
 import torch
 
 class xSample(torch.autograd.Function):
+    """
+    This method is deprecated
+    """
     def __init__(ctx):
         N = 16
         ctx.Q = pow(2, N-1) - 1
@@ -17,6 +18,9 @@ class xSample(torch.autograd.Function):
         return g
 
 class oSample(torch.autograd.Function):
+    """
+    This method is deprecated
+    """
     def __init__(ctx):
         N = 8
         ctx.Q = pow(2, N-1) - 1
@@ -30,7 +34,7 @@ class oSample(torch.autograd.Function):
     def backward(ctx, g):
         return g
 
-class mSample(torch.autograd.Function):
+class mSample_F(torch.autograd.Function):
     """
     res = clamp(round(input/pow(2,-m)) * pow(2, -m), -pow(2, N-1), pow(2, N-1) - 1)
     """
@@ -46,6 +50,22 @@ class mSample(torch.autograd.Function):
         return delt*M
     def backward(ctx, g):
         return g
+
+class mSample(torch.nn.Module):
+    """
+    A module wrapper of mSample Function.
+    """
+    def __init__(self, N = 16, m = 6):
+        super(mSample, self).__init__()
+        self.N = N
+        self.m = m
+
+    def forward(self, input):
+        return mSample_F(N = self.N, m = self.m)(input)
+    
+    def extra_repr(self):
+        s = ('N = %d, m = %d'%(self.N, self.m))
+        return s
     
 def sampleStateDict(net,N = 16, m = 6):
     """
@@ -65,6 +85,7 @@ def protectStateDict(net):
     make a entirely new memory space for a state dict to protect it
     Since all pytorch items are using chain table,
     so some tricky methods are used
+    Todo: better method should be used
     """
     Dict = net.state_dict()
     Key = Dict.keys()
