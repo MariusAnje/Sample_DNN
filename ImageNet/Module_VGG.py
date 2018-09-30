@@ -26,17 +26,20 @@ model_urls = {
 
 class VGG(nn.Module):
 
-    def __init__(self, features, num_classes=1000, init_weights=True):
+    def __init__(self, features, num_classes=1000, init_weights=True, N=16, m=6):
         super(VGG, self).__init__()
         self.features = features
         self.classifier = nn.Sequential(
             nn.Linear(512 * 7 * 7, 4096),
             nn.ReLU(True),
+            mSample(N=N,m=m),
             nn.Dropout(),
             nn.Linear(4096, 4096),
             nn.ReLU(True),
+            mSample(N=N,m=m),
             nn.Dropout(),
             nn.Linear(4096, num_classes),
+            mSample(N=N,m=m),
         )
         if init_weights:
             self._initialize_weights()
@@ -61,7 +64,7 @@ class VGG(nn.Module):
                 nn.init.constant_(m.bias, 0)
 
 
-def make_layers(cfg, batch_norm=False):
+def make_layers(cfg, batch_norm=False, N=16, m=6):
     layers = []
     in_channels = 3
     for v in cfg:
@@ -70,9 +73,9 @@ def make_layers(cfg, batch_norm=False):
         else:
             conv2d = nn.Conv2d(in_channels, v, kernel_size=3, padding=1)
             if batch_norm:
-                layers += [conv2d, nn.BatchNorm2d(v), nn.ReLU(inplace=True), mSample()]
+                layers += [conv2d, nn.BatchNorm2d(v), nn.ReLU(inplace=True), mSample(N=N,m=m)]
             else:
-                layers += [conv2d, nn.ReLU(inplace=True), mSample()]
+                layers += [conv2d, nn.ReLU(inplace=True), mSample(N=N,m=m)]
             in_channels = v
     return nn.Sequential(*layers)
 
@@ -141,7 +144,7 @@ def vgg13_bn(pretrained=False, **kwargs):
     return model
 
 
-def vgg16(pretrained=False, **kwargs):
+def vgg16(pretrained=False, N=16, m=6,**kwargs):
     """VGG 16-layer model (configuration "D")
 
     Args:
@@ -149,13 +152,13 @@ def vgg16(pretrained=False, **kwargs):
     """
     if pretrained:
         kwargs['init_weights'] = False
-    model = VGG(make_layers(cfg['D']), **kwargs)
+    model = VGG(make_layers(cfg['D'],N=N,m=m), **kwargs)
     if pretrained:
         model.load_state_dict(model_zoo.load_url(model_urls['vgg16']))
     return model
 
 
-def vgg16_bn(pretrained=False, **kwargs):
+def vgg16_bn(pretrained=False, N=16, m=6, **kwargs):
     """VGG 16-layer model (configuration "D") with batch normalization
 
     Args:
@@ -163,7 +166,7 @@ def vgg16_bn(pretrained=False, **kwargs):
     """
     if pretrained:
         kwargs['init_weights'] = False
-    model = VGG(make_layers(cfg['D'], batch_norm=True), **kwargs)
+    model = VGG(make_layers(cfg['D'], batch_norm=True, N=N, m=m), **kwargs)
     if pretrained:
         model.load_state_dict(model_zoo.load_url(model_urls['vgg16_bn']))
     return model
