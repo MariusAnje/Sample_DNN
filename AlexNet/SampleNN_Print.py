@@ -1,3 +1,5 @@
+# This file goes with chips so we use cut tail and head
+
 import torch
 
 def int2str(inputs):
@@ -86,7 +88,7 @@ class mSample_F(torch.autograd.Function):
     def forward(ctx, inputs):
         Q = ctx.Q
         delt = ctx.delt
-        M = (inputs.to(torch.float32)/delt).round().clamp(-Q-1,Q)
+        M = (inputs.to(torch.float32)/delt).to(torch.int16).to(torch.float32)
         write2file(M)
         return delt*M
     def backward(ctx, g):
