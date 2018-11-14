@@ -19,6 +19,4 @@ Sampling Deep Neural Networks to fixed point in **Pytorch**
 1. It is crucially important that PyTorch only support float point in cuda versions, so any test based on integer could not be applied to cuda devices
 
 ## Notes
-1. Implemented a very radical method in sampling, checking in training is needed (ver 2018.8.30).
-2. VGG16 needs a dynamic range of $2^8$ and a precision of $2^{-6}$ BN seems to be helpful
-3. I'm thinking about transferring residual blocks into convolutional ones, so that it can be better applied on chips
+1. VGG16 needs a dynamic range of $2^8$ and a precision of $2^{-6}$, BN is not helpful
