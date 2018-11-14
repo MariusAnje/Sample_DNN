@@ -26,7 +26,7 @@ model_urls = {
 
 class VGG(nn.Module):
 
-    def __init__(self, features, num_classes=1000, init_weights=True, N=16, m=6):
+    def __init__(self, features, N, m, num_classes=1000, init_weights=True):
         super(VGG, self).__init__()
         self.features = features
         self.classifier = nn.Sequential(
@@ -64,7 +64,7 @@ class VGG(nn.Module):
                 nn.init.constant_(m.bias, 0)
 
 
-def make_layers(cfg, batch_norm=False, N=16, m=6):
+def make_layers(cfg, N, m, batch_norm=False):
     layers = []
     in_channels = 3
     for v in cfg:
@@ -144,7 +144,7 @@ def vgg13_bn(pretrained=False, **kwargs):
     return model
 
 
-def vgg16(pretrained=False, N=16, m=6,**kwargs):
+def vgg16(N, m,pretrained=False, **kwargs):
     """VGG 16-layer model (configuration "D")
 
     Args:
@@ -152,13 +152,13 @@ def vgg16(pretrained=False, N=16, m=6,**kwargs):
     """
     if pretrained:
         kwargs['init_weights'] = False
-    model = VGG(make_layers(cfg['D'],N=N,m=m), **kwargs)
+    model = VGG(make_layers(cfg['D'],N=N,m=m), N=N, m=m, **kwargs)
     if pretrained:
         model.load_state_dict(model_zoo.load_url(model_urls['vgg16']))
     return model
 
 
-def vgg16_bn(pretrained=False, N=16, m=6, **kwargs):
+def vgg16_bn(N, m, pretrained=False, **kwargs):
     """VGG 16-layer model (configuration "D") with batch normalization
 
     Args:
@@ -166,7 +166,7 @@ def vgg16_bn(pretrained=False, N=16, m=6, **kwargs):
     """
     if pretrained:
         kwargs['init_weights'] = False
-    model = VGG(make_layers(cfg['D'], batch_norm=True, N=N, m=m), **kwargs)
+    model = VGG(make_layers(cfg['D'], batch_norm=True, N=N, m=m), N=N, m=m, **kwargs)
     if pretrained:
         model.load_state_dict(model_zoo.load_url(model_urls['vgg16_bn']))
     return model

@@ -39,7 +39,7 @@ class mSample_F(torch.autograd.Function):
     res = clamp(round(input/pow(2,-m)) * pow(2, -m), -pow(2, N-1), pow(2, N-1) - 1)
     """
     
-    def __init__(ctx, N = 16, m = 6):
+    def __init__(ctx, N, m):
         ctx.delt = pow(2,-m)
         ctx.Q = pow(2, N-1) - 1
         
@@ -55,7 +55,7 @@ class mSample(torch.nn.Module):
     """
     A module wrapper of mSample Function.
     """
-    def __init__(self, N = 16, m = 6):
+    def __init__(self, N, m):
         super(mSample, self).__init__()
         self.N = N
         self.m = m
@@ -67,7 +67,7 @@ class mSample(torch.nn.Module):
         s = ('N = %d, m = %d'%(self.N, self.m))
         return s
     
-def sampleStateDict(net,N = 16, m = 6):
+def sampleStateDict(net,N, m):
     """
     Quantize a state dict of one pytorch.model
     the operation is inplace
