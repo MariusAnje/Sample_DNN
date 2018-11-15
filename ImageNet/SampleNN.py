@@ -77,9 +77,9 @@ def sampleStateDict(net,N, m):
     Key = Dict.keys()
     for i in Key:
         # this sample all weights and leave bias unchanged
-        if i.find("bias") == -1:
-            Dict[i] = mSample(N,m)(Dict[i])
-    #    Dict[i] = mSample(N,m)(Dict[i])
+        #if i.find("bias") == -1:
+        #    Dict[i] = mSample(N,m)(Dict[i])
+        Dict[i] = mSample(N,m)(Dict[i])
     net.load_state_dict(Dict)
     del Dict
 
