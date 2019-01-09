@@ -81,15 +81,16 @@ class mSample_F(torch.autograd.Function):
     res = clamp(round(input/pow(2,-m)) * pow(2, -m), -pow(2, N-1), pow(2, N-1) - 1)
     """
     
-    def __init__(ctx, N = 16, m = 6):
+    def __init__(ctx, N, m, name):
         ctx.delt = pow(2,-m)
         ctx.Q = pow(2, N-1) - 1
+        ctx.name = name
         
     def forward(ctx, inputs):
         Q = ctx.Q
         delt = ctx.delt
         M = (inputs.to(torch.float32)/delt).to(torch.int16).to(torch.float32)
-        write2file(M)
+        torch.save(M, ctx.name + '.pt')
         return delt*M
     def backward(ctx, g):
         return g
@@ -98,13 +99,14 @@ class mSample(torch.nn.Module):
     """
     A module wrapper of mSample Function.
     """
-    def __init__(self, N = 16, m = 6):
+    def __init__(self, N, m, name):
         super(mSample, self).__init__()
         self.N = N
         self.m = m
+        self.name = name
 
     def forward(self, input):
-        return mSample_F(N = self.N, m = self.m)(input)
+        return mSample_F(N = self.N, m = self.m, name = self.name)(input)
     
     def extra_repr(self):
         s = ('N = %d, m = %d'%(self.N, self.m))
@@ -119,10 +121,7 @@ def sampleStateDict(net,N = 16, m = 6):
     Dict = net.state_dict()
     Key = Dict.keys()
     for i in Key:
-        happy = open('happy.txt','a')
-        happy.write(i+'\n')
-        happy.close()
-        Dict[i] = mSample(N,m)(Dict[i])
+        Dict[i] = mSample(N,m,i)(Dict[i])
     net.load_state_dict(Dict)
     del Dict
 
