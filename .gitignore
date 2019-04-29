@@ -1,6 +1,9 @@
 # Byte-compiled / optimized files
 __pycache__/
 *.py[cod]
+*.pt
+*.csv
+*.tar
 
 # IPython checkpoints
 .ipynb_checkpoints/
