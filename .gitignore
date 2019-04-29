@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 *.pt
 *.csv
+*.tar
 
 # IPython checkpoints
 .ipynb_checkpoints/
