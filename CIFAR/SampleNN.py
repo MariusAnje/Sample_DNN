@@ -39,7 +39,7 @@ class mSample_F(torch.autograd.Function):
     res = clamp(round(input/pow(2,-m)) * pow(2, -m), -pow(2, N-1), pow(2, N-1) - 1)
     """
     
-    def __init__(ctx, N, m):
+    def __init__(ctx, N = 16, m = 6):
         ctx.delt = pow(2,-m)
         ctx.Q = pow(2, N-1) - 1
         
@@ -55,7 +55,7 @@ class mSample(torch.nn.Module):
     """
     A module wrapper of mSample Function.
     """
-    def __init__(self, N, m):
+    def __init__(self, N = 16, m = 6):
         super(mSample, self).__init__()
         self.N = N
         self.m = m
@@ -67,7 +67,7 @@ class mSample(torch.nn.Module):
         s = ('N = %d, m = %d'%(self.N, self.m))
         return s
     
-def sampleStateDict(net,N, m):
+def sampleStateDict(net,N = 16, m = 6):
     """
     Quantize a state dict of one pytorch.model
     the operation is inplace
@@ -76,9 +76,6 @@ def sampleStateDict(net,N, m):
     Dict = net.state_dict()
     Key = Dict.keys()
     for i in Key:
-        # this sample all weights and leave bias unchanged
-        #if i.find("bias") == -1:
-        #    Dict[i] = mSample(N,m)(Dict[i])
         Dict[i] = mSample(N,m)(Dict[i])
     net.load_state_dict(Dict)
     del Dict
@@ -88,7 +85,6 @@ def protectStateDict(net):
     make a entirely new memory space for a state dict to protect it
     Since all pytorch items are using chain table,
     so some tricky methods are used
-    
     Todo: better method should be used
     """
     Dict = net.state_dict()
