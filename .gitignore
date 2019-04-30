@@ -4,6 +4,7 @@ __pycache__/
 *.pt
 *.csv
 *.tar
+*.zip
 
 # IPython checkpoints
 .ipynb_checkpoints/
