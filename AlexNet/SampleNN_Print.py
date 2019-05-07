@@ -19,17 +19,16 @@ def int2str(inputs):
         a += '0'
     return a[::-1]
 
-def write2file(M):
-    happy = open('happy.txt','a')
-    happy.write("SSSSSSS\n")
+def write2file(M, name):
+    file = open(name+'.csv', 'w+')
     if len(M.shape) == 4:
-        for i in range(M.shape[0]):
-            for j in range(M.shape[1]):
-                for k in range(M.shape[2]):
-                    for l in range(M.shape[3]):
-                        happy.write(int2str(int(M[i][j][k][l]))+' ')
-                    happy.write('\n')
-                happy.write('\n')
+        for i in range(M.shape[0]):            
+            for k in range(M.shape[2]):
+                for l in range(M.shape[3]):
+                    for j in range(M.shape[1]):
+                        file.write(str(int(M[i][j][k][l])))
+                        file.write(',')
+    """
     if len(M.shape) == 2:
         for i in range(M.shape[0]):
             for j in range(M.shape[1]):
@@ -39,7 +38,8 @@ def write2file(M):
         for i in range(M.shape[0]):
             happy.write(int2str(int(M[i]))+' ')
         happy.write('\n')
-    happy.close()
+    """
+    file.close()
     
 
 class xSample(torch.autograd.Function):
@@ -89,8 +89,9 @@ class mSample_F(torch.autograd.Function):
     def forward(ctx, inputs):
         Q = ctx.Q
         delt = ctx.delt
-        M = (inputs.to(torch.float32)/delt).to(torch.int16).to(torch.float32)
-        torch.save(M, ctx.name + '.pt')
+        M = (inputs.to(torch.float32)/delt).round().clamp(-Q-1,Q)
+        #torch.save(M, ctx.name + '.pt')
+        write2file(M,ctx.name)
         return delt*M
     def backward(ctx, g):
         return g

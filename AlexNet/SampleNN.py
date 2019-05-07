@@ -88,7 +88,7 @@ class mSample_F(torch.autograd.Function):
     def forward(ctx, inputs):
         Q = ctx.Q
         delt = ctx.delt
-        M = (inputs.to(torch.float32)/delt).to(torch.int16).to(torch.float32)
+        M = (inputs.to(torch.float32)/delt).round().clamp(-Q-1,Q)
         return delt*M
     def backward(ctx, g):
         return g

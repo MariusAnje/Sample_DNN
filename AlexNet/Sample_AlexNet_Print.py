@@ -1,7 +1,7 @@
 # This document is forked from https://github.com/pytorch/vision/blob/master/torchvision/models/alexnet.py
 import torch.nn as nn
 import torch.utils.model_zoo as model_zoo
-from SampleNN import mSample
+from SampleNN_Print import mSample
 
 
 __all__ = ['AlexNet', 'alexnet']
@@ -19,7 +19,7 @@ class AlexNet(nn.Module):
         N = 16
         m = 8
         self.features = nn.Sequential(
-            nn.Conv2d(3, 64, kernel_size=11, stride=4, padding=2),
+            nn.Conv2d(3, 64, kernel_size=11, stride=4, padding=0),
             mSample(N=N,m=m, name = 'conv1'),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=3, stride=2),
